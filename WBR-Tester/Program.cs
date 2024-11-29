@@ -5,6 +5,7 @@ using HidLibrary;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text.Json;
 
 namespace Debug
 {
@@ -14,6 +15,7 @@ namespace Debug
     internal class Program
     {
         static HashSet<List<byte>> UselessBytes = new HashSet<List<byte>>();
+        static HashSet<List<byte>> UsefullBytes = new HashSet<List<byte>>();
         public class USB
         {
             public USB(int vid, int pid, int id)
@@ -108,8 +110,11 @@ namespace Debug
             {
                 result += ((int)b) + " ";
             }
-            //if(!UselessBytes.Contains(bytes))
-           // Console.WriteLine("Bytes: " + result);
+            if (!UselessBytes.Contains(bytes)) {
+                if (!UsefullBytes.Contains(bytes))
+                    UsefullBytes.Add(bytes);
+                Console.WriteLine("Detected!");
+            } 
         }
 
         static void GatherUselessBytes(HidReport report)
@@ -121,40 +126,42 @@ namespace Debug
 
         static async Task Main(string[] args)
         {
-            MessageWait("1. Please make sure your usb reciever is plugged in.");
-            var devicesBefore = HidDevices.Enumerate().ToList();
-
-            MessageWait("2. Please remove the usb reviever and ensure that no other usb devices are disconnecting randomly");
-            var devicesAfter = HidDevices.Enumerate().ToList();
-            var devicesAfterHash = new Dictionary<USB, HidDevice>();
-            //Console.WriteLine("Adding devices to dict..");
-            foreach (var d in devicesAfter)
+            try
             {
-                var key = new USB(d);
-                if (!devicesAfterHash.ContainsKey(key))
-                {
-                    //Console.WriteLine(key);
-                    devicesAfterHash.Add(key, d);
-                }
-            }
-            bool found = false;
-            Dictionary<USB, HidDevice> uniqueDevices = new Dictionary<USB, HidDevice>();
+                MessageWait("1. Please make sure your usb reciever is plugged in.");
+                var devicesBefore = HidDevices.Enumerate().ToList();
 
-            Console.WriteLine("Getting the unique devices..");
-            foreach (HidDevice device in devicesBefore)
-            {
-                var usb = new USB(device);
-                //Console.WriteLine("Checking: " + usb);
-                if (!devicesAfterHash.ContainsKey(usb))
+                MessageWait("2. Please remove the usb reviever and ensure that no other usb devices are disconnecting randomly");
+                var devicesAfter = HidDevices.Enumerate().ToList();
+                var devicesAfterHash = new Dictionary<USB, HidDevice>();
+                //Console.WriteLine("Adding devices to dict..");
+                foreach (var d in devicesAfter)
                 {
-                    if(!uniqueDevices.ContainsKey(usb))
+                    var key = new USB(d);
+                    if (!devicesAfterHash.ContainsKey(key))
                     {
-                        uniqueDevices.Add(usb, device);
-                        Console.WriteLine(usb);
-                        found = true;
+                        //Console.WriteLine(key);
+                        devicesAfterHash.Add(key, d);
                     }
                 }
-            }
+                bool found = false;
+                Dictionary<USB, HidDevice> uniqueDevices = new Dictionary<USB, HidDevice>();
+
+                Console.WriteLine("Getting the unique devices..");
+                foreach (HidDevice device in devicesBefore)
+                {
+                    var usb = new USB(device);
+                    //Console.WriteLine("Checking: " + usb);
+                    if (!devicesAfterHash.ContainsKey(usb))
+                    {
+                        if (!uniqueDevices.ContainsKey(usb))
+                        {
+                            uniqueDevices.Add(usb, device);
+                            Console.WriteLine(usb);
+                            found = true;
+                        }
+                    }
+                }
 
 
 #if DEBUG
@@ -177,139 +184,91 @@ namespace Debug
 #endif
 
 
-            if (!found)
-            {
-                Console.WriteLine("Couldn't find your device.");
-                Console.ReadKey();
-                return;
-            }
-
-
-
-
-
-
-            MessageWait("3. Ensure there are no sounds playing");
-
-            
-            List<Thread> threads = new List<Thread>();
-            bool stop = false;
-            
-            foreach (var device in uniqueDevices.Values)
-            {
-                device.OpenDevice();
-                Thread t = new Thread(async () =>
+                if (!found)
                 {
-                    while (!stop)
-                    {
-                        HidReport report = device.ReadReport();
-                        if(!stop)
-                        GatherUselessBytes(report);
-                    }
-                });
-                t.Start();
-                threads.Add(t);
-
-            } 
-            MessageWait("4. Wait ~30s-60s to be safe before continuing.");
-            
-            stop = true;
-            foreach (var device in uniqueDevices.Values)
-            {
-                device.CloseDevice();
-            }
-            foreach (var t in threads)
-            {
-                t.Interrupt();
-                t.Join();
-            }
-
-            MessageWait("5. After continuing click the desired button on your headset multiple times and you will see the required bytes \n   [The more data the better :)]");
-
-            threads = new List<Thread>();
-            stop = false;
-            foreach (var device in uniqueDevices.Values)
-            {
-                device.OpenDevice();
-                Thread t = new Thread(async () =>
-                {
-                    while (!stop)
-                    {
-                        HidReport report = device.ReadReport();
-                        if (!stop)
-                            OnReport(report);
-                    }
-                });
-                t.Start();
-                threads.Add(t);
-
-            }
-
-            while (true) ;
-
-
-            /*
-
-            Console.WriteLine("Found {0} devices", allDevices.Count);
-
-            foreach (var device in allDevices)
-            {
-                Console.WriteLine("Got device: {0}\r\n", usbRegistry.FullName);
-
-                if (usbRegistry.Open(out usbDevice))
-                {
-                    Console.WriteLine("Device Information\r\n------------------");
-
-                    Console.WriteLine("{0}", usbDevice.Info.ToString());
-
-                    Console.WriteLine("VID & PID: {0} {1}", usbDevice.Info.Descriptor.VendorID, usbDevice.Info.Descriptor.ProductID);
-
-                    Console.WriteLine("\r\nDevice configuration\r\n--------------------");
-                    foreach (UsbConfigInfo usbConfigInfo in usbDevice.Configs)
-                    {
-                        Console.WriteLine("{0}", usbConfigInfo.ToString());
-
-                        Console.WriteLine("\r\nDevice interface list\r\n---------------------");
-                        IReadOnlyCollection<UsbInterfaceInfo> interfaceList = usbConfigInfo.InterfaceInfoList;
-                        foreach (UsbInterfaceInfo usbInterfaceInfo in interfaceList)
-                        {
-                            Console.WriteLine("{0}", usbInterfaceInfo.ToString());
-
-                            Console.WriteLine("\r\nDevice endpoint list\r\n--------------------");
-                            IReadOnlyCollection<UsbEndpointInfo> endpointList = usbInterfaceInfo.EndpointInfoList;
-                            foreach (UsbEndpointInfo usbEndpointInfo in endpointList)
-                            {
-                                Console.WriteLine("{0}", usbEndpointInfo.ToString());
-                            }
-                        }
-                    }
-                    usbDevice.Close();
+                    Console.WriteLine("Couldn't find your device.");
+                    Console.ReadKey();
+                    return;
                 }
-                Console.WriteLine("\r\n----- Device information finished -----\r\n");
-            }
 
 
 
-            Console.WriteLine("Trying to find our device: {0} {1}", 0x03F0, 0x0696);
-            UsbDeviceFinder usbDeviceFinder = new UsbDeviceFinder(0x03F0, 0x0696);
 
-            // This does not work !!! WHY ?
-            usbDevice = UsbDevice.OpenUsbDevice(usbDeviceFinder);
 
-            if (usbDevice != null)
+
+                MessageWait("3. Plug your reciever back in and ensure there are no sounds playing");
+
+
+                List<Thread> threads = new List<Thread>();
+                bool stop = false;
+
+                foreach (var device in uniqueDevices.Values)
+                {
+                    device.OpenDevice();
+                    Thread t = new Thread(async () =>
+                    {
+                        while (!stop)
+                        {
+                            HidReport report = device.ReadReport();
+                            if (!stop)
+                                GatherUselessBytes(report);
+                        }
+                    });
+                    t.Start();
+                    threads.Add(t);
+
+                }
+                MessageWait("4. Wait ~30s-60s to be safe before continuing.");
+
+                stop = true;
+                foreach (var device in uniqueDevices.Values)
+                {
+                    device.CloseDevice();
+                }
+                foreach (var t in threads)
+                {
+                    t.Interrupt();
+                    t.Join();
+                }
+
+                MessageWait("5. After continuing click the desired button on your headset multiple times, the result will be saved as 'debug.json' \n   [The more data the better :)]");
+
+                threads = new List<Thread>();
+                stop = false;
+                foreach (var device in uniqueDevices.Values)
+                {
+                    device.OpenDevice();
+                    Thread t = new Thread(async () =>
+                    {
+                        while (!stop)
+                        {
+                            HidReport report = device.ReadReport();
+                            if (!stop)
+                                OnReport(report);
+                        }
+                    });
+                    t.Start();
+                    threads.Add(t);
+
+                }
+
+                while (true)
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = false };
+                    string jsonString = JsonSerializer.Serialize(UsefullBytes, options);
+
+                    string EnvironmentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "//";
+                    File.WriteAllText(EnvironmentPath + "debug.json", jsonString);
+                    Thread.Sleep(1000);
+
+
+                }
+            } catch(Exception ex)
             {
-                Console.WriteLine("OK");
-            }
-            else
-            {
-                Console.WriteLine("FAIL");
-            }
+                Console.WriteLine(ex);
 
-            UsbDevice.Exit();
-
-            Console.Write("Press anything to close");
-            Console.ReadKey();
-            */
+                while (true) ;
+            }
         }
 
         private static void DeviceAttachedHandler()

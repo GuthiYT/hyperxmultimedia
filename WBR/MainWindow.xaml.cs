@@ -45,6 +45,7 @@ namespace WBR
         }
         protected override void OnClosed(EventArgs e)
         {
+            trayIcon.Visible = true;
             base.OnClosed(e);
             Process.GetCurrentProcess().Kill();
         }
@@ -106,7 +107,6 @@ namespace WBR
 
             trayIcon.BalloonTipText = "";
             trayIcon.BalloonTipTitle = "WBR";
-            trayIcon.Visible = true;
             trayIcon.Text = "WBR";
             trayIcon.Icon = new System.Drawing.Icon(FileHandler.EnvironmentPath + "icon.ico");
 

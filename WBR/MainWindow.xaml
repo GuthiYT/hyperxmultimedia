@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:WBR"
         mc:Ignorable="d"
         Title="WBR" Height="160" Width="410" Background="#2B2D31" ResizeMode="CanMinimize">
-    
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15*"/>
@@ -107,7 +106,7 @@
 
                     <StackPanel>
                         <TextBlock Foreground="#AEAFB5" Background="#313338">Keycode 2</TextBlock>
-                        <TextBox Foreground="#AEAFB5" Background="#313338" Text="0xmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmB0" Name="Keycode2"/>
+                        <TextBox Foreground="#AEAFB5" Background="#313338" Text="0xB0" Name="Keycode2"/>
                     </StackPanel>
 
                     <StackPanel>
