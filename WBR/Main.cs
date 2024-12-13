@@ -12,28 +12,28 @@ namespace WBR
     public class Main
     {
         public bool Started { get; private set; } = false;
-        public Device device { get; private set; }
-        int devices = 0;
+        public Device Device { get; private set; }
+        private int Devices = 0;
 
         public Main(){}
 
         public int Start(string deviceName, int vid, int pid)
         {
-            if (Started) return devices;
+            if (Started) return Devices;
 
-            device = new Device(deviceName, vid, pid);
-            devices = device.Init();
+            Device = new Device(deviceName, vid, pid);
+            Devices = Device.Init();
 
             Started = true;
 
-            return devices;
+            return Devices;
         }
         public void Stop()
         {
             if(!Started) return;
 
-            device.Stop();
-            device = null;
+            Device.Stop();
+            Device = null;
 
             Started = false;
         }

@@ -25,20 +25,20 @@ namespace WBR
         private int Vid; // Vendor ID
         private int Pid; // Product ID
         private string DeviceName;
-        private List<Thread> threads;
-        private bool abort = false;
+        private List<Thread> Threads;
+        private bool Abort = false;
         /// <summary>
         /// Goes through every single thread created previously and aborts them
         /// </summary>
         public void Stop()
         {
-            abort = true;
-            if (threads == null) return;
+            Abort = true;
+            if (Threads == null) return;
 
-            for(int i = 0; i < threads.Count; i++)
+            for(int i = 0; i < Threads.Count; i++)
             {
-                if (threads[i] != null) threads[i].Interrupt();
-                threads.RemoveAt(i);
+                if (Threads[i] != null) Threads[i].Interrupt();
+                Threads.RemoveAt(i);
             }
         }
 
@@ -48,7 +48,7 @@ namespace WBR
         /// <returns></returns>
         public int Init()
         {
-            abort = false;
+            Abort = false;
             var f = HidDevices.Enumerate();
             var devices = HidDevices.Enumerate(Vid, Pid).ToList();
 
@@ -68,42 +68,42 @@ namespace WBR
             MediaHandler.VOLUME_CURRENT = (int)VideoPlayerController.AudioManager.GetMasterVolume();
 
             // Creating threads
-            threads = new List<Thread>(new Thread[devices.Count]);
+            Threads = new List<Thread>(new Thread[devices.Count]);
             for (int i = 0; i < devices.Count(); i++)
             {
                 HidDevice device = devices[i];
-                threads[i] = new Thread(() =>
+                Threads[i] = new Thread(() =>
                 {
-                    while (device != null && !abort)
+                    while (device != null && !Abort)
                     {
                         ReportHandler(device);
                     }
                 });
-                threads[i].Start();
+                Threads[i].Start();
             }
             return devices.Count;
         }
 
         private void ReportHandler(HidDevice device)
         {
-            List<byte> data = device.ReadReport().Data.ToList();
-
-            if (data.Count < 1)
+            byte[] data = device.ReadReport().Data.ToArray();
+            Console.WriteLine(data);
+            if (data.Length < 1)
                 return;
 
             Console.WriteLine(BytesToString(data));
 
-            if (DevicePresets.Contains(DeviceName, data) && !abort)
+            if (DevicePresets.Contains(DeviceName, data) && !Abort)
             {
                 ClickHandler.HandleClick();
             }
 
         }
 
-        private string BytesToString(List<byte> bytes)
+        private string BytesToString(byte[] bytes)
         {
             string res = "{ ";
-            int size = bytes.Count;
+            int size = bytes.Length;
             for (int i = 0; i < size; i++)
             {
                 res += "[" + (int)bytes[i] + "]";

@@ -15,8 +15,8 @@ namespace WBR
     public class Config
     {
         public string FileName = "config.json";
-        public int VendorID  { get; set; }= 1008; //
-        public int ProductID  { get; set; }= 1686;
+        public int VendorID  { get; set; }//= 1008; //
+        public int ProductID  { get; set; }//= 1686;
         public int Interval  { get; set; }//= 500; //
         public byte Keycode1  { get; set; }//= 179; //
         public byte Keycode2  { get; set; }//= 176; //
@@ -44,6 +44,8 @@ namespace WBR
         private void SetConfigDefaults()
         {
             // Config defualts
+            VendorID = 1008;
+            ProductID = 1686;
             Device = "HyperX Cloud II Wireless (DTS)";
             Keycode1 = 179;
             Keycode2 = 176;
@@ -63,7 +65,7 @@ namespace WBR
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
+                ErrorHandler.NewError(e);
                 SetConfigDefaults();
                 SaveConfig();
             }

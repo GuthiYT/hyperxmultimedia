@@ -16,7 +16,7 @@ namespace WBR
     {
 
         public static string EnvironmentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "//";
-        static string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\WBR\\";
+        public static string Appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\WBR\\";
         public static void WriteToFile(string path, string text)
         {
             File.WriteAllText(EnvironmentPath + path, text);
@@ -24,14 +24,19 @@ namespace WBR
         // TODO: actually write to appdata!
         public static void WriteToAppData(string path, string text)
         {
-            System.IO.Directory.CreateDirectory(appdata);
-            File.WriteAllText(appdata + path, text);
+            System.IO.Directory.CreateDirectory(Appdata);
+            File.WriteAllText(Appdata + path, text);
+        }
+        public static void AddToAppData(string path, string text)
+        {
+            System.IO.Directory.CreateDirectory(Appdata);
+            File.AppendAllText(Appdata + path, text + Environment.NewLine);
         }
         public static string ReadFromAppData(string path)
         {
-            if (!File.Exists(appdata + path)) return null;
+            if (!File.Exists(Appdata + path)) return null;
 
-            return File.ReadAllText(appdata + path);
+            return File.ReadAllText(Appdata + path);
         }
         public static string[] ReadLinesFromFile(string path)
         {

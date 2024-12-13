@@ -1,17 +1,8 @@
-﻿using System;
-using System.Linq;
-
-using HidLibrary;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
+﻿using HidLibrary;
 using System.Text.Json;
 
 namespace Debug
 {
-    //
-    // Don't look here bad debug code!!
-    //
     internal class Program
     {
         static HashSet<List<byte>> UselessBytes = new HashSet<List<byte>>();
@@ -58,7 +49,7 @@ namespace Debug
             }
 
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is USB)
                 {
@@ -231,7 +222,7 @@ namespace Debug
                     t.Join();
                 }
 
-                MessageWait("5. After continuing click the desired button on your headset multiple times, the result will be saved as 'debug.json' \n   [The more data the better :)]");
+                MessageWait("5. After continuing, click the desired button on your headset multiple times. The result will be saved as 'debug.json' \n   (The more data we gather, the better)");
 
                 threads = new List<Thread>();
                 stop = false;

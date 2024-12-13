@@ -8,31 +8,31 @@ namespace WBR
 {
     internal class DevicePresets
     {
-        private static Dictionary<string, DevicePresets> presets = new Dictionary<string, DevicePresets>() {
-            { "HyperX Cloud II Wireless (DTS)",
-                new DevicePresets(new List<List<byte>>() { 
-                    new List<byte>() { 255, 187, 32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    new List<byte>() { 255, 187, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-                    new List<byte>() { 255, 187, 32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0 }, 
-                    new List<byte>() { 255, 187, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0 }, 
+        private static Dictionary<string, DevicePresets> Presets = new Dictionary<string, DevicePresets>() {
+            {   "HyperX Cloud II Wireless (DTS)",
+                new DevicePresets(new byte[,] {
+                    { 255, 187, 32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 255, 187, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+                    { 255, 187, 32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0 }, 
+                    { 255, 187, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0 }, 
                 })
             },
             //1 1 142 0 0 0 0 0 197 107 181 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-            { "Corsair Virtuoso XT",
-                new DevicePresets(new List<List<byte>>() {
-                    new List<byte>() { 1, 1, 142, 0, 0, 0, 0, 0, 197, 107, 181,
+            {   "Corsair Virtuoso XT",
+                new DevicePresets(new byte[,] {
+                    { 1, 1, 142, 0, 0, 0, 0, 0, 197, 107, 181,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
-                    new List<byte>() { 1, 1, 142, 0, 1, 0, 0, 0, 197, 107, 181,
+                    { 1, 1, 142, 0, 1, 0, 0, 0, 197, 107, 181,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
                 })
             },
             /* adding a new device
-            { "PLACEHOLDER",
-                new DevicePresets(new List<List<byte>>() {
-                    new List<byte>() { 0, 0, 0, 0},
-                    new List<byte>() { 0, 0, 0, 0 },
-                    new List<byte>() { 0, 0, 0, 0 },
-                    new List<byte>() { 0, 0, 0, 0 },
+            {   "PLACEHOLDER",
+                new DevicePresets(new byte[,] {
+                    { 0, 0, 0, 0},
+                    { 0, 0, 0, 0 },
+                    { 0, 0, 0, 0 },
+                    { 0, 0, 0, 0 },
                 })
             },
             */
@@ -40,26 +40,29 @@ namespace WBR
 
         };
 
-        public static bool Contains(string device, List<byte> bytes) 
+        public static bool Contains(string device, byte[] bytes) 
         {
-            Console.WriteLine(device);
-            if(presets.ContainsKey(device))
+            if(Presets.ContainsKey(device))
             {
-                foreach(var byteList in presets[device].mute)
+                ref byte[,] byteArray = ref Presets[device].Bytes;
+
+                int l1 = byteArray.GetLength(0);
+                int l2 = byteArray.GetLength(1);
+
+
+                if (l2 != bytes.Length)
+                    return false;
+
+                for (int i = 0; i < l1; i++) 
                 {
-                    if (bytes.Count == byteList.Count)
+                    bool same = true;
+                    for (int j = 0; j < l2; j++)
                     {
-                        bool same = true;
-                        for (int i = 0; i < bytes.Count; i++)
-                        {
-                            if (bytes[i] != byteList[i])
-                                same = false;
-
-                        }
-                        if (same)
-                            return true;
+                        if (bytes[j] != byteArray[i, j])
+                            same = false;
                     }
-
+                    if (same)
+                        return true;
                 }
             }
             return false;
@@ -68,12 +71,12 @@ namespace WBR
 
 
         
-        private DevicePresets(List<List<byte>> bytes)
+        private DevicePresets(byte[,] bytes)
         {
-            mute = bytes;
+            Bytes = bytes;
         }
 
-        private List<List<byte>> mute;
+        private byte[,] Bytes;
     }
 
 
