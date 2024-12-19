@@ -8,8 +8,7 @@ namespace WBR
 {
     static public class ErrorHandler
     {
-        private static string FileName = "errors.txt";
-        private static bool FirstError = true;
+        private const string FileName = "errors.txt";
 
         public static TResult Try<T1, TResult>(Func<T1, TResult> function, T1 parameter1)
         {
@@ -52,9 +51,6 @@ namespace WBR
 
         public static void NewError(string error)
         {
-            if (FirstError)
-                FileHandler.AddToAppData(FileName, "");
-
             var utcNow = DateTime.UtcNow;
             Console.WriteLine(utcNow.ToString());
             string s = $"[{utcNow}]: {error}";

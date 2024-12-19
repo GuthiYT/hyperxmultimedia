@@ -15,8 +15,8 @@ namespace WBR
     internal class FileHandler
     {
 
-        public static string EnvironmentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "//";
-        public static string Appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\WBR\\";
+        public static readonly string EnvironmentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "//";
+        public static readonly string Appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\WBR\\";
         public static void WriteToFile(string path, string text)
         {
             File.WriteAllText(EnvironmentPath + path, text);

@@ -126,6 +126,7 @@ namespace WBR
         protected override void OnClosed(EventArgs e)
         {
             TrayIcon.Visible = false;
+            TrayIcon.Dispose();
             base.OnClosed(e);
             Process.GetCurrentProcess().Kill();
         }
