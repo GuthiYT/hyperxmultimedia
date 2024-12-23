@@ -13,20 +13,15 @@ namespace WBR
     {
         public bool Started { get; private set; } = false;
         public Device Device { get; private set; }
-        private int Devices = 0;
 
         public Main(){}
 
-        public int Start(string deviceName, int vid, int pid)
+        public void Start(string deviceName, int vid, int pid)
         {
-            if (Started) return Devices;
-
             Device = new Device(deviceName, vid, pid);
-            Devices = Device.Init();
+            Device.Init();
 
             Started = true;
-
-            return Devices;
         }
         public void Stop()
         {

@@ -17,7 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Microsoft.Win32;
-using static System.Net.Mime.MediaTypeNames;
+
+
 
 namespace WBR
 {
@@ -31,6 +32,7 @@ namespace WBR
         public MainWindow()
         {
             InitializeComponent();
+
             Main = new Main();
             Start();
             SetStartup();
@@ -69,8 +71,7 @@ namespace WBR
                 Main.Stop();
             }
 
-            int devices = Main.Start(GetDeviceName(), Config.VendorID, Config.ProductID);
-            DeviceAmount.Text = devices.ToString();
+            Main.Start(GetDeviceName(), Config.VendorID, Config.ProductID);
 
             MediaHandler.PLAY_PAUSE = ErrorHandler.Try(ParseHexStringToByte, Keycode1.Text);
             MediaHandler.NEXT = ErrorHandler.Try(ParseHexStringToByte, Keycode2.Text);
@@ -226,6 +227,11 @@ namespace WBR
         private string GetDeviceName()
         {
             return DeviceName.SelectedValue.ToString();
+        }
+
+        private void HideTray_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -46,7 +46,7 @@ namespace WBR
         /// Initializes HID device and opens a thread for each "sub-hid"
         /// </summary>
         /// <returns></returns>
-        public int Init()
+        public void Init()
         {
             Abort = false;
             var f = HidDevices.Enumerate();
@@ -81,7 +81,6 @@ namespace WBR
                 });
                 Threads[i].Start();
             }
-            return devices.Count;
         }
 
         private void ReportHandler(HidDevice device)

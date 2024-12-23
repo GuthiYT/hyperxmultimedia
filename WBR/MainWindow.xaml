@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WBR"
         mc:Ignorable="d"
-        Title="WBR" Width="410" Background="#2B2D31" ResizeMode="CanMinimize" Height="173">
+        Title="WBR" Width="380" Background="#2B2D31" ResizeMode="CanMinimize" Height="173">
 
 
     <ListBox Name="controllerList" BorderBrush="#707070" BorderThickness="1" Background="#2B2D31"
@@ -73,8 +73,8 @@
                 </StackPanel>
 
                 <StackPanel>
-                    <TextBlock Foreground="#AEAFB5" Background="#313338">Devices detected</TextBlock>
-                    <TextBox IsReadOnly="True" Foreground="#AEAFB5" Background="#313338" Name="DeviceAmount" HorizontalAlignment="Stretch">0</TextBox>
+                    <TextBlock Foreground="#AEAFB5" Background="#313338">Active</TextBlock>
+                    <TextBox IsReadOnly="True" Foreground="#AEAFB5" Background="#313338" Name="Active">False</TextBox>
                 </StackPanel>
             </ListBox>
         </ListBoxItem>
@@ -121,22 +121,15 @@
 
                 </StackPanel>
 
-                <StackPanel Width="108">
+                <StackPanel >
                     <TextBlock Foreground="#AEAFB5" Background="#313338">Device</TextBlock>
                     <ComboBox SelectionChanged="ComboBox_SelectionChanged" Height="18" FontSize="9"
                               Name="DeviceName" SelectedValuePath="Content">
-                        
+
                         <ComboBoxItem IsSelected="True">HyperX Cloud II Wireless (DTS)</ComboBoxItem>
                         <ComboBoxItem IsSelected="False">Corsair Virtuoso XT</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
-
-                <StackPanel>
-                    <TextBlock Foreground="#AEAFB5" Background="#313338">Active</TextBlock>
-                    <TextBox IsReadOnly="True" Foreground="#AEAFB5" Background="#313338" Name="Active">False</TextBox>
-                </StackPanel>
-
-
             </ListBox>
         </ListBoxItem>
 
@@ -193,7 +186,7 @@
                             BorderBrush="#AEAFB5">
                         <Grid Background="#313338" HorizontalAlignment="Left" Margin="2,0,0,0">
                             <TextBlock HorizontalAlignment="Center" Foreground="#AEAFB5" Margin="25,0,5,2">Hide in system tray</TextBlock>
-                            <CheckBox Margin="3,1.6,0,0" Name="HideTray">
+                            <CheckBox Margin="3,1.6,0,0" Name="HideTray" Checked="HideTray_Checked">
 
                             </CheckBox>
 
