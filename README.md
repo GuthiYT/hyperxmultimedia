@@ -6,8 +6,7 @@
 * [Setup](#setup)
 * [Technologies](#technologies)
 ## General info
-Repurposes any button on (theoretically) any wireless headset ([Supported devices](#supported-devices)) to do 3 different actions that you can programm yourself. My personal favourite is that I can now
-walk around my room and still pause/skip music!
+Remaps any button on (theoretically) any wireless headset ([Supported devices](#supported-devices)) to do 3 different actions that you can programm yourself, with the default being pause, skip, raplay
 
 ## Warning
 The original functionality is handled locally on the headset itself so it still gets triggered.
@@ -16,6 +15,7 @@ Because of that I would advise you to only use this tool if you can live without
 ## Supported devices
 [How to get your device to be supported](#how-to-get-your-device-to-be-supported) (Windows only)
 * HyperX Cloud II Wireless (DTS Version)
+* HyperX Cloud III Wireless
 * Corsair Virtuoso XT
 
 ## How to get your device to be supported
