@@ -26,7 +26,7 @@ Because of that I would advise you to only use this tool if you can live without
 ### Download
 You can donload the .exe here on github under "Releases"
 ## How to find you Vendor and Product ID:
-### The newest and easiest way now is to download `debug.zip` under releases and follow the instructions until *step 3.*
+### The newest and easiest way now is to download [`debug.zip`](https://github.com/Tiziam/Wireless-Button-Reprogrammer/releases/tag/Debug) under releases and follow the instructions until *step 3.*
 \
 Alternatively (old way):
 
