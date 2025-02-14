@@ -45,7 +45,6 @@ namespace WBR
         /// <summary>
         /// Initializes HID device and opens a thread for each "sub-hid"
         /// </summary>
-        /// <returns></returns>
         public void Init()
         {
             Abort = false;
@@ -83,6 +82,9 @@ namespace WBR
             }
         }
 
+        /// <summary>
+        /// Handles the bytes send by the device
+        /// </summary>
         private void ReportHandler(HidDevice device)
         {
             byte[] data = device.ReadReport().Data.ToArray();

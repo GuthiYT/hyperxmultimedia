@@ -31,11 +31,14 @@ namespace WBR
         public static Config Config = new Config();
         public MainWindow()
         {
+            ErrorHandler.NewError("Starting");
             InitializeComponent();
 
             Main = new Main();
+            SetupTray();
             Start();
             SetStartup();
+
         }
 
         // Start
@@ -45,8 +48,6 @@ namespace WBR
         }
         private void Start()
         {
-            SetupTray();
-
             Config.LoadConfig();
             ApplyConfig();
             Apply();

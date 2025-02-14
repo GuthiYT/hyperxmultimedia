@@ -127,6 +127,7 @@
                               Name="DeviceName" SelectedValuePath="Content">
                         <ComboBoxItem IsSelected="True">HyperX Cloud II Wireless (DTS)</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">HyperX Cloud III Wireless</ComboBoxItem>
+                        <ComboBoxItem IsSelected="False">HyperX Cloud Alpha</ComboBoxItem>
                         <ComboBoxItem IsSelected="False">Corsair Virtuoso XT</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
